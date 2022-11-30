@@ -4,10 +4,12 @@ import zio.*
 import zio.test.*
 
 def play(number: Int): UIO[String] =
-  if (number % 3  == 0 && number % 5  == 0) ZIO.succeed("FizzBuzz")
-  else if (number % 3  == 0 )  ZIO.succeed("Fizz")
-  else if (number % 5  == 0)  ZIO.succeed("Buzz")
-  else ZIO.succeed(number.toString)
+  ZIO.succeed(
+    if number % 3  == 0 && number % 5  == 0 then "FizzBuzz"
+    else if number % 3  == 0 then  "Fizz"
+    else if number % 5  == 0 then  "Buzz"
+    else number.toString
+  )
 
 def playAdvanced(number : Int) :UIO[String] =
   if  (number.toString.contains('5') && number.toString.contains('3')) play(number).map(playResult =>
@@ -22,11 +24,11 @@ def playAdvanced(number : Int) :UIO[String] =
     if (playResult.contains("Fizz")||playResult.contains("Buzz")) playResult+"Buzz"
     else "Buzz"
   )
-  else play(number)
+  else ZIO.succeed(number.toString)
 
 object FizzBuzzTest extends ZIOSpecDefault {
-      def spec = suite("kata fizzBuzz test")(
-        test("1 = 1") {
+  def spec = suite("kata fizzBuzz test")(
+    test("1 = 1") {
       assertZIO(play(1))(Assertion.equalTo("1"))
     },
     test ("2 = 2") {
@@ -65,7 +67,11 @@ object FizzBuzzTest extends ZIOSpecDefault {
 object FizzBuzzAdvancedTest extends ZIOSpecDefault {
   def spec = suite("kata fizzBuzzAdvanced rajoute fizz si contient 3 rajoute buzz si contient 5 ")(
     test("1 = 1") {
-      assertZIO(playAdvanced(1))(Assertion.equalTo("1"))
+      for
+      result <- playAdvanced(1)
+      yield assertTrue(
+        result =="1"
+      )
     },
     test("3 = FizzFizz"){
       assertZIO(playAdvanced(3))(Assertion.equalTo("FizzFizz"))
