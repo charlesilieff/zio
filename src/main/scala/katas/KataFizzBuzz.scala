@@ -9,7 +9,7 @@ def play(number: Int): UIO[String] =
   else if (number % 5  == 0)  ZIO.succeed("Buzz")
   else ZIO.succeed(number.toString)
 
-def play2(number : Int) :UIO[String] =
+def playAdvanced(number : Int) :UIO[String] =
   if  (number.toString.contains('5') && number.toString.contains('3')) play(number).map(playResult =>
     if (playResult.contains("Fizz")||playResult.contains("Buzz"))"Fizz"+playResult+"Buzz"
     else "FizzBuzz"
@@ -62,22 +62,22 @@ object FizzBuzzTest extends ZIOSpecDefault {
   )
 }
 
-object FizzBuzz2Test extends ZIOSpecDefault {
-  def spec = suite("kata fizzBuzz2 rajoute fizz si contient 3 rajoute buzz si contient 5 ")(
+object FizzBuzzAdvancedTest extends ZIOSpecDefault {
+  def spec = suite("kata fizzBuzzAdvanced rajoute fizz si contient 3 rajoute buzz si contient 5 ")(
     test("1 = 1") {
-      assertZIO(play2(1))(Assertion.equalTo("1"))
+      assertZIO(playAdvanced(1))(Assertion.equalTo("1"))
     },
     test("3 = FizzFizz"){
-      assertZIO(play2(3))(Assertion.equalTo("FizzFizz"))
+      assertZIO(playAdvanced(3))(Assertion.equalTo("FizzFizz"))
     },
     test("15 = FizzBuzzBuzz") {
-      assertZIO(play2(15))(Assertion.equalTo("FizzBuzzBuzz"))
+      assertZIO(playAdvanced(15))(Assertion.equalTo("FizzBuzzBuzz"))
     },
     test("53 = FizzBuzz"){
-      assertZIO(play2(53))(Assertion.equalTo("FizzBuzz"))
+      assertZIO(playAdvanced(53))(Assertion.equalTo("FizzBuzz"))
     },
     test("35 = FizzBuzzBuzz"){
-      assertZIO(play2(35))(Assertion.equalTo("FizzBuzzBuzz"))
+      assertZIO(playAdvanced(35))(Assertion.equalTo("FizzBuzzBuzz"))
     }
   )
 }
